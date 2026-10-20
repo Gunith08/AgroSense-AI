@@ -30,17 +30,17 @@ export default function TelemetryInspector({ telemetry, lang }) {
   return (
     <div className="space-y-8">
 
-      {/* Header with Forest Green Gradient */}
-      <div className="bg-gradient-to-r from-emerald-900 via-green-900 to-emerald-950 text-white rounded-3xl p-6 sm:p-8 shadow-md border-2 border-emerald-800/60">
+      {/* Header with Fresh Grass-Green Gradient */}
+      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-600 text-white rounded-3xl p-6 sm:p-8 shadow-md border-2 border-green-500">
         <div className="flex items-center space-x-4">
-          <div className="w-13 h-13 rounded-2xl bg-emerald-700/30 border-2 border-emerald-500/40 flex items-center justify-center text-emerald-300 shadow-inner shrink-0">
+          <div className="w-13 h-13 rounded-2xl bg-white/20 border-2 border-white/40 flex items-center justify-center text-white shadow-xs shrink-0">
             <Layers className="w-7 h-7" />
           </div>
           <div className="overflow-hidden">
             <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white">
               {t.telemetryTitle}
             </h2>
-            <p className="text-sm text-emerald-200/90 font-medium mt-1 leading-relaxed">
+            <p className="text-sm text-green-50 font-medium mt-1 leading-relaxed">
               {t.telemetrySubtitle}
             </p>
           </div>
@@ -49,26 +49,26 @@ export default function TelemetryInspector({ telemetry, lang }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        {/* Raw JSON MQTT Packet in Deep Evergreen */}
-        <div className="bg-[#08180f] rounded-3xl p-6 sm:p-8 text-emerald-300 font-mono shadow-xl flex flex-col justify-between space-y-5 border-2 border-emerald-900/80">
-          <div className="flex items-center justify-between border-b border-emerald-900/80 pb-4">
-            <div className="flex items-center space-x-2.5 text-xs sm:text-sm text-emerald-200 font-bold">
-              <Terminal className="w-4 h-4 text-emerald-400" />
+        {/* Raw JSON MQTT Packet in Clean Light Grass-Green Console */}
+        <div className="bg-gradient-to-br from-[#ebf7ef] to-[#dff1e5] rounded-3xl p-6 sm:p-8 text-[#0e4225] font-mono shadow-md flex flex-col justify-between space-y-5 border-2 border-green-300">
+          <div className="flex items-center justify-between border-b-2 border-green-200 pb-4">
+            <div className="flex items-center space-x-2.5 text-xs sm:text-sm text-[#0e4225] font-extrabold">
+              <Terminal className="w-4 h-4 text-green-700" />
               <span>MQTT TOPIC: agrosense/v1/farm/demo-01/telemetry</span>
             </div>
-            <span className="text-xs bg-[#0f301d] text-emerald-300 px-3 py-1 rounded-full border border-emerald-700 font-bold">
+            <span className="text-xs bg-white text-green-900 px-3 py-1 rounded-full border border-green-300 font-black shadow-xs">
               QoS 1
             </span>
           </div>
 
-          <pre className="text-xs sm:text-sm overflow-x-auto p-3 leading-relaxed text-emerald-300 bg-black/50 rounded-2xl border border-emerald-950">
+          <pre className="text-xs sm:text-sm overflow-x-auto p-4 leading-relaxed text-[#0e4225] bg-white/95 rounded-2xl border-2 border-green-200 shadow-inner font-bold">
             {JSON.stringify(mqttPayload, null, 2)}
           </pre>
 
-          <div className="border-t border-emerald-900/80 pt-3.5 text-xs sm:text-sm text-emerald-400/90 flex items-center justify-between font-bold">
+          <div className="border-t-2 border-green-200 pt-3.5 text-xs sm:text-sm text-[#0e4225] flex items-center justify-between font-bold">
             <span>Broker: Mosquitto Telemetry Engine</span>
-            <span className="text-emerald-400 flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="text-green-800 flex items-center gap-2 font-black">
+              <span className="w-2.5 h-2.5 rounded-full bg-green-600 animate-pulse"></span>
               CONNECTED
             </span>
           </div>

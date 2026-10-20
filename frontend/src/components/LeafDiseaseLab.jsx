@@ -43,17 +43,17 @@ export default function LeafDiseaseLab({ lang }) {
   return (
     <div className="space-y-8">
 
-      {/* Section Header with Multi-Tone Forest Green Gradient */}
-      <div className="bg-gradient-to-r from-emerald-900 via-green-900 to-emerald-950 text-white rounded-3xl p-6 sm:p-8 shadow-md border-2 border-emerald-800/60">
+      {/* Section Header with Fresh Grass-Green Gradient */}
+      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-600 text-white rounded-3xl p-6 sm:p-8 shadow-md border-2 border-green-500">
         <div className="flex items-center space-x-4">
-          <div className="w-13 h-13 rounded-2xl bg-emerald-700/30 border-2 border-emerald-500/40 flex items-center justify-center text-emerald-300 shadow-inner shrink-0">
+          <div className="w-13 h-13 rounded-2xl bg-white/20 border-2 border-white/40 flex items-center justify-center text-white shadow-xs shrink-0">
             <Bug className="w-7 h-7" />
           </div>
           <div className="overflow-hidden">
             <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white">
               {t.leafAiTitle}
             </h2>
-            <p className="text-sm text-emerald-200/90 font-medium mt-1 leading-relaxed">
+            <p className="text-sm text-green-50 font-medium mt-1 leading-relaxed">
               {t.leafAiSubtitle}
             </p>
           </div>
@@ -239,7 +239,7 @@ export default function LeafDiseaseLab({ lang }) {
                 className="group bg-[#edf5f0] rounded-2xl border-2 border-[#cfe3d6] overflow-hidden shadow-xs hover:shadow-md hover:border-emerald-700 transition-all flex flex-col cursor-pointer block"
               >
                 {/* Real YouTube Video Thumbnail */}
-                <div className="relative aspect-video w-full bg-[#0a1e13] overflow-hidden">
+                <div className="relative aspect-video w-full bg-green-950 overflow-hidden">
                   <img 
                     src={video.thumbnail} 
                     alt={video.titleEn} 
@@ -248,25 +248,25 @@ export default function LeafDiseaseLab({ lang }) {
                       e.target.src = "https://images.unsplash.com/photo-1592417817098-8f3d6910985c?w=640&q=80";
                     }}
                   />
-                  {/* Play Button Overlay in Emerald Green */}
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/15 flex items-center justify-center transition-colors">
-                    <div className="w-13 h-13 rounded-full bg-emerald-800 group-hover:bg-emerald-700 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform border-2 border-white/40">
+                  {/* Play Button Overlay in Grass Green */}
+                  <div className="absolute inset-0 bg-black/25 group-hover:bg-black/10 flex items-center justify-center transition-colors">
+                    <div className="w-13 h-13 rounded-full bg-green-600 group-hover:bg-green-500 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform border-2 border-white/60">
                       <Play className="w-6 h-6 fill-white ml-0.5" />
                     </div>
                   </div>
                   {/* Channel Tag */}
-                  <div className="absolute bottom-2.5 left-2.5 bg-[#0a1e13]/90 text-emerald-200 px-3 py-1 rounded-lg text-xs font-extrabold backdrop-blur-xs border border-emerald-800">
+                  <div className="absolute bottom-2.5 left-2.5 bg-black/70 text-white px-3 py-1 rounded-lg text-xs font-extrabold backdrop-blur-xs border border-white/20">
                     {video.channel}
                   </div>
                 </div>
 
                 {/* Video Info & Direct Clickable Link */}
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-3.5">
-                  <h5 className="font-black text-[#0a2316] text-sm sm:text-base leading-snug group-hover:text-emerald-800 transition-colors">
+                  <h5 className="font-black text-[#0a2316] text-sm sm:text-base leading-snug group-hover:text-green-700 transition-colors">
                     {lang === 'te' ? video.titleTe : video.titleEn}
                   </h5>
 
-                  <div className="flex items-center justify-between text-xs sm:text-sm font-extrabold text-emerald-800 pt-2 border-t border-[#cfe3d6]">
+                  <div className="flex items-center justify-between text-xs sm:text-sm font-extrabold text-green-700 pt-2 border-t border-[#cfe3d6]">
                     <span className="flex items-center gap-1.5">
                       <span>{t.watchOnYoutube}</span>
                     </span>

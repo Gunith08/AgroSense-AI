@@ -23,33 +23,33 @@ export default function AdvisoryReport({ advisory, lang, onNavigateToLeafAi }) {
   return (
     <div className="space-y-8">
 
-      {/* Section Header with Multi-Tone Forest Green Gradient */}
-      <div className="bg-gradient-to-r from-emerald-900 via-green-900 to-emerald-950 text-white rounded-3xl p-6 sm:p-8 shadow-md border-2 border-emerald-800/60">
+      {/* Section Header with Fresh Vibrant Grass Green Gradient */}
+      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-600 text-white rounded-3xl p-6 sm:p-8 shadow-md border-2 border-green-400">
         <div className="flex items-center space-x-4">
-          <div className="w-13 h-13 rounded-2xl bg-emerald-700/30 border-2 border-emerald-500/40 flex items-center justify-center text-emerald-300 shadow-inner shrink-0">
+          <div className="w-13 h-13 rounded-2xl bg-white/20 border-2 border-white/30 flex items-center justify-center text-white shadow-xs shrink-0">
             <ShieldCheck className="w-7 h-7" />
           </div>
           <div className="overflow-hidden">
             <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white">
               {t.advisoryHeader}
             </h2>
-            <p className="text-sm text-emerald-200/90 font-medium mt-1 leading-relaxed">
+            <p className="text-sm text-green-100 font-medium mt-1 leading-relaxed">
               {t.advisorySubheader}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Prominent Cautionary Note in Dark Olive / Forest Green Styling */}
-      <div className="bg-[#eef5ed] border-2 border-emerald-600 rounded-3xl p-6 sm:p-7 shadow-xs flex items-start gap-4">
-        <div className="w-11 h-11 rounded-2xl bg-emerald-800 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
-          <AlertTriangle className="w-6 h-6 text-emerald-200" />
+      {/* Prominent Cautionary Note in Clean Grass Green & Warm Accent */}
+      <div className="bg-[#edf8f1] border-2 border-green-400 rounded-3xl p-6 sm:p-7 shadow-xs flex items-start gap-4">
+        <div className="w-11 h-11 rounded-2xl bg-green-600 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+          <AlertTriangle className="w-6 h-6 text-green-100" />
         </div>
         <div className="space-y-1.5 flex-1">
-          <h4 className="text-base sm:text-lg font-black text-[#091f13] flex items-center gap-2">
+          <h4 className="text-base sm:text-lg font-black text-[#0e4225] flex items-center gap-2">
             <span>{t.cautionTitle}</span>
           </h4>
-          <p className="text-sm text-[#0f2d1c] leading-relaxed font-semibold">
+          <p className="text-sm text-[#11522d] leading-relaxed font-semibold">
             {t.cautionText}
           </p>
         </div>
@@ -59,22 +59,22 @@ export default function AdvisoryReport({ advisory, lang, onNavigateToLeafAi }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
         {/* CARD 1: Recommended Crops to Cultivate */}
-        <div className="bg-[#f8fbf9] rounded-3xl p-6 sm:p-8 border-2 border-[#cfe3d6] shadow-md shadow-emerald-950/5 space-y-6">
-          <div className="flex items-center justify-between border-b border-[#cfe3d6] pb-4">
+        <div className="bg-[#f8fbf9] rounded-3xl p-6 sm:p-8 border-2 border-green-200 shadow-md shadow-emerald-950/5 space-y-6">
+          <div className="flex items-center justify-between border-b border-green-200/80 pb-4">
             <div className="flex items-center space-x-3">
-              <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+              <div className="w-11 h-11 rounded-xl bg-green-100 text-green-700 flex items-center justify-center">
                 <Sprout className="w-6 h-6" />
               </div>
-              <h3 className="font-black text-[#0a2316] text-lg sm:text-xl">
+              <h3 className="font-black text-[#0e4225] text-lg sm:text-xl">
                 {t.suitableCropsTitle}
               </h3>
             </div>
-            <span className="text-xs font-black text-emerald-950 bg-emerald-200/80 px-3 py-1 rounded-full border border-emerald-400">
+            <span className="text-xs font-black text-green-950 bg-green-100 px-3 py-1 rounded-full border border-green-300">
               {lang === 'te' ? 'టాప్ 3 ఎంపికలు' : 'Top 3 Matches'}
             </span>
           </div>
 
-          <p className="text-xs sm:text-sm text-emerald-950/80 font-medium leading-relaxed">
+          <p className="text-xs sm:text-sm text-green-900 font-medium leading-relaxed">
             {t.suitableCropsDesc}
           </p>
 
@@ -82,35 +82,35 @@ export default function AdvisoryReport({ advisory, lang, onNavigateToLeafAi }) {
             {topCrops.map((crop, idx) => (
               <div 
                 key={crop.id}
-                className="p-5 rounded-2xl border-2 border-[#cfe3d6] bg-[#edf5f0] hover:border-emerald-600 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="p-5 rounded-2xl border-2 border-green-200 bg-[#eef8f2] hover:border-green-500 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="space-y-2 flex-1">
                   <div className="flex items-center space-x-3">
-                    <span className="w-7 h-7 rounded-full bg-emerald-800 text-white text-xs font-black flex items-center justify-center shadow-xs">
+                    <span className="w-7 h-7 rounded-full bg-green-600 text-white text-xs font-black flex items-center justify-center shadow-xs">
                       #{idx + 1}
                     </span>
-                    <h4 className="font-black text-[#0a2316] text-base sm:text-lg">
+                    <h4 className="font-black text-[#0e4225] text-base sm:text-lg">
                       {lang === 'te' ? crop.nameTe : crop.name}
                     </h4>
                   </div>
-                  <p className="text-xs sm:text-sm text-[#0f2d1c] leading-relaxed font-semibold">
+                  <p className="text-xs sm:text-sm text-[#11522d] leading-relaxed font-semibold">
                     {lang === 'te' ? crop.descTe : crop.descEn}
                   </p>
-                  <div className="flex flex-wrap gap-2 pt-1 text-xs text-emerald-950 font-bold">
-                    <span className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-lg border border-emerald-300">
-                      <Calendar className="w-3.5 h-3.5 text-emerald-700" />
+                  <div className="flex flex-wrap gap-2 pt-1 text-xs text-green-950 font-bold">
+                    <span className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-lg border border-green-200">
+                      <Calendar className="w-3.5 h-3.5 text-green-700" />
                       {lang === 'te' ? crop.daysToMaturityTe : crop.daysToMaturity}
                     </span>
-                    <span className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-lg border border-emerald-300">
-                      <Droplets className="w-3.5 h-3.5 text-emerald-700" />
+                    <span className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-lg border border-green-200">
+                      <Droplets className="w-3.5 h-3.5 text-green-700" />
                       {lang === 'te' ? crop.waterNeedTe : crop.waterNeed}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-3 sm:pt-0 border-[#cfe3d6] shrink-0">
-                  <span className="text-xs text-emerald-900 font-extrabold uppercase">{t.suitability}</span>
-                  <span className="text-2xl sm:text-3xl font-black font-mono text-emerald-800">
+                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-3 sm:pt-0 border-green-200 shrink-0">
+                  <span className="text-xs text-green-800 font-extrabold uppercase">{t.suitability}</span>
+                  <span className="text-2xl sm:text-3xl font-black font-mono text-green-700">
                     {crop.suitabilityScore}%
                   </span>
                 </div>
