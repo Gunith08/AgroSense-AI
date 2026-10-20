@@ -1,0 +1,58 @@
+{
+  "guntur": {
+    "location": "Guntur",
+    "temperature_c": 31.0,
+    "humidity_pct": 72.0,
+    "rain_mm": 0.0,
+    "region": "AP Chilli & Cotton Belt"
+  },
+  "vijayawada": {
+    "location": "Vijayawada",
+    "temperature_c": 32.0,
+    "humidity_pct": 75.0,
+    "rain_mm": 2.0,
+    "region": "Krishna Delta"
+  },
+  "hyderabad": {
+    "location": "Hyderabad",
+    "temperature_c": 29.0,
+    "humidity_pct": 60.0,
+    "rain_mm": 0.0,
+    "region": "Peri-Urban Vegetable Belt"
+  },
+  "warangal": {
+    "location": "Warangal",
+    "temperature_c": 30.0,
+    "humidity_pct": 68.0,
+    "rain_mm": 0.0,
+    "region": "Telangana Cotton & Paddy"
+  },
+  "tirupati": {
+    "location": "Tirupati",
+    "temperature_c": 31.0,
+    "humidity_pct": 65.0,
+    "rain_mm": 0.0,
+    "region": "Rayalaseema Groundnut Zone"
+  },
+  "kurnool": {
+    "location": "Kurnool",
+    "temperature_c": 33.0,
+    "humidity_pct": 52.0,
+    "rain_mm": 0.0,
+    "region": "Black Soil Millets & Pulses"
+  },
+  "rajahmundry": {
+    "location": "Rajahmundry",
+    "temperature_c": 32.0,
+    "humidity_pct": 78.0,
+    "rain_mm": 4.0,
+    "region": "Godavari Fertile Alluvium"
+  },
+  "anantapur": {
+    "location": "Anantapur",
+    "temperature_c": 34.0,
+    "humidity_pct": 48.0,
+    "rain_mm": 0.0,
+    "region": "Dryland Groundnut & Millets"
+  }
+}
