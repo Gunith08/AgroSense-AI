@@ -105,7 +105,7 @@ export default function App() {
   const t = translations[lang];
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between font-sans">
+    <div className="min-h-screen bg-[#f0f5f1] text-[#0f291e] flex flex-col justify-between font-sans">
       
       {/* Top Navigation Bar */}
       <Navbar 
@@ -116,8 +116,8 @@ export default function App() {
         isTransmitting={isTransmitting}
       />
 
-      {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex-1 w-full">
+      {/* Main Content Area - Generous Spacing & High-Contrast Readability */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-10 py-8 sm:py-12 flex-1 w-full">
         
         {activeTab === 'overview' && (
           <IoTDeviceStation
@@ -154,16 +154,16 @@ export default function App() {
 
       </main>
 
-      {/* Clean Professional Footer - Without University/Workshop Mentions */}
-      <footer className="bg-white border-t border-slate-200 mt-12 py-7">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-slate-600 gap-4">
-          <div className="flex items-center space-x-2 font-bold text-slate-800">
-            <span className="text-emerald-700 font-black">AgroSense AI</span>
+      {/* Clean Organic Sage Footer */}
+      <footer className="bg-[#f8fbf9] border-t-2 border-[#cfe3d6] mt-14 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-10 flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-emerald-950 font-bold gap-4">
+          <div className="flex items-center space-x-2.5">
+            <span className="text-emerald-800 font-black text-base">AgroSense AI</span>
             <span>•</span>
-            <span>{lang === 'te' ? 'స్మార్ట్ వ్యవసాయ సలహా & నిర్ణయ వ్యవస్థ' : 'Precision Agriculture & Smart Decision Support System'}</span>
+            <span className="font-semibold text-emerald-900">{lang === 'te' ? 'స్మార్ట్ వ్యవసాయ సలహా & నిర్ణయ వ్యవస్థ' : 'Precision Agriculture & Smart Decision Support System'}</span>
           </div>
           <div className="flex items-center space-x-3">
-            <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-xs">
+            <span className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-950 border border-emerald-300 font-extrabold text-xs">
               {lang === 'te' ? 'ఆఫ్‌లైన్ మరియు ఆన్‌లైన్ రెడీ' : 'Offline & Online Ready'}
             </span>
           </div>

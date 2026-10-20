@@ -28,100 +28,100 @@ export default function TelemetryInspector({ telemetry, lang }) {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-8">
 
-      {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-800 via-green-800 to-teal-900 text-white rounded-3xl p-6 sm:p-8 shadow-md shadow-emerald-900/15 border border-emerald-700/50">
-        <div className="flex items-center space-x-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shadow-inner shrink-0">
+      {/* Header with Forest Green Gradient */}
+      <div className="bg-gradient-to-r from-emerald-900 via-green-900 to-emerald-950 text-white rounded-3xl p-6 sm:p-8 shadow-md border-2 border-emerald-800/60">
+        <div className="flex items-center space-x-4">
+          <div className="w-13 h-13 rounded-2xl bg-emerald-700/30 border-2 border-emerald-500/40 flex items-center justify-center text-emerald-300 shadow-inner shrink-0">
             <Layers className="w-7 h-7" />
           </div>
           <div className="overflow-hidden">
             <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white">
               {t.telemetryTitle}
             </h2>
-            <p className="text-xs sm:text-base text-emerald-100 font-medium mt-1">
+            <p className="text-sm text-emerald-200/90 font-medium mt-1 leading-relaxed">
               {t.telemetrySubtitle}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        {/* Raw JSON MQTT Packet */}
-        <div className="bg-slate-900 rounded-3xl p-6 sm:p-7 text-emerald-400 font-mono shadow-xl flex flex-col justify-between space-y-4 border-2 border-slate-800">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3.5">
-            <div className="flex items-center space-x-2 text-xs sm:text-sm text-slate-300 font-bold">
+        {/* Raw JSON MQTT Packet in Deep Evergreen */}
+        <div className="bg-[#08180f] rounded-3xl p-6 sm:p-8 text-emerald-300 font-mono shadow-xl flex flex-col justify-between space-y-5 border-2 border-emerald-900/80">
+          <div className="flex items-center justify-between border-b border-emerald-900/80 pb-4">
+            <div className="flex items-center space-x-2.5 text-xs sm:text-sm text-emerald-200 font-bold">
               <Terminal className="w-4 h-4 text-emerald-400" />
               <span>MQTT TOPIC: agrosense/v1/farm/demo-01/telemetry</span>
             </div>
-            <span className="text-xs bg-emerald-950 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-800 font-bold">
+            <span className="text-xs bg-[#0f301d] text-emerald-300 px-3 py-1 rounded-full border border-emerald-700 font-bold">
               QoS 1
             </span>
           </div>
 
-          <pre className="text-xs sm:text-sm overflow-x-auto p-2 leading-relaxed text-emerald-300 bg-black/40 rounded-xl">
+          <pre className="text-xs sm:text-sm overflow-x-auto p-3 leading-relaxed text-emerald-300 bg-black/50 rounded-2xl border border-emerald-950">
             {JSON.stringify(mqttPayload, null, 2)}
           </pre>
 
-          <div className="border-t border-slate-800 pt-3 text-xs sm:text-sm text-slate-400 flex items-center justify-between font-bold">
+          <div className="border-t border-emerald-900/80 pt-3.5 text-xs sm:text-sm text-emerald-400/90 flex items-center justify-between font-bold">
             <span>Broker: Mosquitto Telemetry Engine</span>
-            <span className="text-emerald-400 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="text-emerald-400 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
               CONNECTED
             </span>
           </div>
         </div>
 
         {/* Data Pipeline Verification & Preprocessing */}
-        <div className="bg-white rounded-3xl p-6 sm:p-7 border-2 border-emerald-100 shadow-md shadow-emerald-950/5 space-y-5">
-          <div className="flex items-center space-x-3 border-b border-slate-100 pb-4">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+        <div className="bg-[#f8fbf9] rounded-3xl p-6 sm:p-8 border-2 border-[#cfe3d6] shadow-md shadow-emerald-950/5 space-y-6">
+          <div className="flex items-center space-x-3 border-b border-[#cfe3d6] pb-4">
+            <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
               <Database className="w-6 h-6" />
             </div>
-            <h3 className="font-extrabold text-slate-900 text-lg sm:text-xl">
+            <h3 className="font-black text-[#0a2316] text-lg sm:text-xl">
               {t.dataPipelineFlow}
             </h3>
           </div>
 
-          <div className="space-y-3.5">
+          <div className="space-y-4">
             
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-green-50/50 border border-emerald-200 flex items-start gap-3.5">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#edf5f0] border-2 border-[#cfe3d6] flex items-start gap-4">
+              <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-extrabold text-emerald-950">1. Physical Range Validation</h4>
-                <p className="text-xs sm:text-sm text-emerald-900 mt-0.5 font-medium">
+                <h4 className="text-sm sm:text-base font-black text-[#0a2316]">1. Physical Range Validation</h4>
+                <p className="text-xs sm:text-sm text-[#0f2d1c] mt-1 font-semibold leading-relaxed">
                   {t.statusValid} (Moisture 0–100%, pH 4–14, Humidity 0–100%).
                 </p>
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-green-50/50 border border-emerald-200 flex items-start gap-3.5">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#edf5f0] border-2 border-[#cfe3d6] flex items-start gap-4">
+              <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-extrabold text-emerald-950">2. UTC Timestamp Normalization</h4>
-                <p className="text-xs sm:text-sm text-emerald-900 mt-0.5 font-medium">
+                <h4 className="text-sm sm:text-base font-black text-[#0a2316]">2. UTC Timestamp Normalization</h4>
+                <p className="text-xs sm:text-sm text-[#0f2d1c] mt-1 font-semibold leading-relaxed">
                   {t.statusTimestamped} (Calibrated to ISO-8601 UTC).
                 </p>
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-green-50/50 border border-emerald-200 flex items-start gap-3.5">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#edf5f0] border-2 border-[#cfe3d6] flex items-start gap-4">
+              <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-extrabold text-emerald-950">3. Deduplication & Sequence Verification</h4>
-                <p className="text-xs sm:text-sm text-emerald-900 mt-0.5 font-medium">
+                <h4 className="text-sm sm:text-base font-black text-[#0a2316]">3. Deduplication & Sequence Verification</h4>
+                <p className="text-xs sm:text-sm text-[#0f2d1c] mt-1 font-semibold leading-relaxed">
                   {t.statusDeduplicated} (Packet hash verified; duplicates dropped).
                 </p>
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 border-2 border-slate-200 flex items-start gap-3.5">
-              <HardDriveDownload className="w-5 h-5 text-slate-700 shrink-0 mt-0.5" />
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#e4ede7] border-2 border-[#cfe3d6] flex items-start gap-4">
+              <HardDriveDownload className="w-5 h-5 text-emerald-800 shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-sm font-extrabold text-slate-900">4. Relational Database Persistence</h4>
-                <p className="text-xs sm:text-sm text-slate-600 mt-0.5 font-medium">
+                <h4 className="text-sm sm:text-base font-black text-[#0a2316]">4. Relational Database Persistence</h4>
+                <p className="text-xs sm:text-sm text-[#0f2d1c] mt-1 font-semibold leading-relaxed">
                   Validated telemetry is committed to local database storage for time-series trend analysis.
                 </p>
               </div>

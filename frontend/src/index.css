@@ -1,18 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --primary-green: #15803d;
-  --primary-light: #dcfce7;
-  --primary-dark: #14532d;
-  --accent-amber: #d97706;
-  --bg-sand: #f8fafc;
+  --primary-forest: #14532d;
+  --primary-emerald: #15803d;
+  --primary-leaf: #16a34a;
+  --accent-mint: #10b981;
+  --bg-earth: #f0f5f1;
+  --card-tint: #f8fbf9;
+  --border-soft: #d2e4d8;
+  --text-dark: #0f291e;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #f8fafc;
-  color: #1e293b;
+  background-color: #f0f5f1;
+  color: #0f291e;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
@@ -20,28 +23,23 @@ body {
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #e2ede5;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
+  background: #a3c9b1;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #7ca88c;
 }
 
-/* LCD digital font feel for sensor readings */
+/* Digital readout feel */
 .font-lcd {
   font-family: 'Courier New', Courier, monospace;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.05em;
-}
-
-/* Glass & Card effects for realistic devices */
-.device-card-glow {
-  box-shadow: 0 10px 25px -5px rgba(22, 101, 52, 0.08), 0 8px 10px -6px rgba(22, 101, 52, 0.04);
+  letter-spacing: -0.04em;
 }
