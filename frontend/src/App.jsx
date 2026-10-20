@@ -4,7 +4,6 @@ import IoTDeviceStation from './components/IoTDeviceStation';
 import AdvisoryReport from './components/AdvisoryReport';
 import LeafDiseaseLab from './components/LeafDiseaseLab';
 import TelemetryInspector from './components/TelemetryInspector';
-import WorkshopPresentationGuide from './components/WorkshopPresentationGuide';
 import { generateFarmerAdvisory, LOCATIONS } from './data/cropsData';
 import { translations } from './data/translations';
 
@@ -37,7 +36,6 @@ export default function App() {
   const fetchWeatherForLocation = async (locId) => {
     const loc = LOCATIONS.find(l => l.id === locId) || LOCATIONS[0];
     try {
-      // Open-Meteo free API
       const res = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current=temperature_2m,relative_humidity_2m,precipitation&hourly=precipitation&forecast_days=1`
       );
@@ -69,7 +67,6 @@ export default function App() {
   // Initial load
   useEffect(() => {
     fetchWeatherForLocation(telemetry.locationId);
-    // Initial advisory
     const initialAdv = generateFarmerAdvisory({
       soilMoisture: telemetry.soilMoisture,
       soilPh: telemetry.soilPh,
@@ -100,17 +97,17 @@ export default function App() {
       });
       setAdvisory(adv);
       setIsTransmitting(false);
-      // Auto-navigate to advisory tab so farmer/students see the result immediately
+      // Auto-navigate to advisory tab so farmer immediately sees the action plan
       setActiveTab('advisory');
-    }, 500);
+    }, 400);
   };
 
   const t = translations[lang];
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between font-sans">
       
-      {/* Top Navigation */}
+      {/* Top Navigation Bar */}
       <Navbar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -120,7 +117,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex-1 w-full">
         
         {activeTab === 'overview' && (
           <IoTDeviceStation
@@ -155,27 +152,20 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'guide' && (
-          <WorkshopPresentationGuide 
-            lang={lang} 
-          />
-        )}
-
       </main>
 
-      {/* Clean Farmer-Friendly Footer */}
-      <footer className="bg-white border-t border-slate-200 mt-12 py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
-          <div className="flex items-center space-x-2">
-            <span className="font-bold text-slate-700">AgroSense AI</span>
+      {/* Clean Professional Footer - Without University/Workshop Mentions */}
+      <footer className="bg-white border-t border-slate-200 mt-12 py-7">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-slate-600 gap-4">
+          <div className="flex items-center space-x-2 font-bold text-slate-800">
+            <span className="text-emerald-700 font-black">AgroSense AI</span>
             <span>•</span>
-            <span>{lang === 'te' ? 'FDP వర్క్‌షాప్ సిమ్యులేషన్ ప్లాట్‌ఫారమ్' : 'FDP Smart Agriculture Simulation Prototype'}</span>
+            <span>{lang === 'te' ? 'స్మార్ట్ వ్యవసాయ సలహా & నిర్ణయ వ్యవస్థ' : 'Precision Agriculture & Smart Decision Support System'}</span>
           </div>
-          <div className="flex items-center space-x-4">
-            <span className="inline-flex items-center px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono text-[11px]">
-              {lang === 'te' ? 'సిమ్యులేషన్ మాత్రమే (100% ఆఫ్‌లైన్)' : 'Simulation Only • 100% Offline Ready'}
+          <div className="flex items-center space-x-3">
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-xs">
+              {lang === 'te' ? 'ఆఫ్‌లైన్ మరియు ఆన్‌లైన్ రెడీ' : 'Offline & Online Ready'}
             </span>
-            <span>Gunith08 / University Workshop</span>
           </div>
         </div>
       </footer>

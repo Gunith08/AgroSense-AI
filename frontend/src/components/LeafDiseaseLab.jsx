@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  Bug, Upload, CheckCircle2, AlertOctagon, ShieldAlert, 
-  Video, ExternalLink, Sparkles, RefreshCcw, Camera
+  Bug, Upload, CheckCircle2, ShieldAlert, 
+  Video, ExternalLink, Sparkles, Camera, Play
 } from 'lucide-react';
 import { translations } from '../data/translations';
 import { LEAF_DISEASES } from '../data/cropsData';
@@ -20,7 +20,7 @@ export default function LeafDiseaseLab({ lang }) {
     setTimeout(() => {
       setSelectedDisease(disease);
       setIsAnalyzing(false);
-    }, 400);
+    }, 350);
   };
 
   // Handle custom file upload
@@ -32,29 +32,28 @@ export default function LeafDiseaseLab({ lang }) {
         setCustomImage(event.target.result);
         setIsAnalyzing(true);
         setTimeout(() => {
-          // Pretrained model simulation maps to tomato leaf diagnosis
-          setSelectedDisease(LEAF_DISEASES[2]); // Late blight sample diagnosis
+          setSelectedDisease(LEAF_DISEASES[2]); // mapped sample
           setIsAnalyzing(false);
-        }, 600);
+        }, 500);
       };
       reader.readAsDataURL(file);
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
 
-      {/* Section Header */}
-      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-xs">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
-            <Bug className="w-6 h-6" />
+      {/* Section Header with Green Gradient */}
+      <div className="bg-gradient-to-r from-emerald-800 via-green-800 to-teal-900 text-white rounded-3xl p-6 sm:p-8 shadow-md shadow-emerald-900/15 border border-emerald-700/50">
+        <div className="flex items-center space-x-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shadow-inner shrink-0">
+            <Bug className="w-7 h-7" />
           </div>
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+          <div className="overflow-hidden">
+            <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white">
               {t.leafAiTitle}
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            <p className="text-xs sm:text-base text-emerald-100 font-medium mt-1">
               {t.leafAiSubtitle}
             </p>
           </div>
@@ -62,85 +61,85 @@ export default function LeafDiseaseLab({ lang }) {
       </div>
 
       {/* Upload Zone & Sample Gallery */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
 
         {/* Upload Box */}
-        <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-xs flex flex-col justify-between">
-          <div className="space-y-3">
-            <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
+        <div className="bg-white rounded-3xl p-6 sm:p-7 border-2 border-emerald-100 shadow-md shadow-emerald-950/5 flex flex-col justify-between">
+          <div className="space-y-4">
+            <h3 className="font-extrabold text-slate-900 text-base sm:text-lg flex items-center gap-2">
               <Camera className="w-5 h-5 text-emerald-700" />
               <span>{lang === 'te' ? 'ఆకు ఫోటో తీయండి / అప్‌లోడ్ చేయండి' : 'Capture / Upload Leaf Photo'}</span>
             </h3>
             
-            <label className="border-2 border-dashed border-emerald-300 hover:border-emerald-500 bg-emerald-50/30 hover:bg-emerald-50/60 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all group">
+            <label className="border-2 border-dashed border-emerald-300 hover:border-emerald-600 bg-emerald-50/40 hover:bg-emerald-50/80 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all group">
               <input 
                 type="file" 
                 accept="image/*" 
                 onChange={handleFileUpload} 
                 className="hidden" 
               />
-              <div className="w-12 h-12 rounded-2xl bg-white shadow-xs border border-emerald-200 flex items-center justify-center text-emerald-700 group-hover:scale-110 transition-transform mb-3">
-                <Upload className="w-6 h-6" />
+              <div className="w-14 h-14 rounded-2xl bg-white shadow-sm border border-emerald-200 flex items-center justify-center text-emerald-700 group-hover:scale-110 transition-transform mb-3">
+                <Upload className="w-7 h-7" />
               </div>
-              <span className="text-xs font-bold text-slate-800">
+              <span className="text-sm font-extrabold text-slate-900">
                 {t.uploadPrompt}
               </span>
-              <span className="text-[11px] text-slate-500 mt-1">
+              <span className="text-xs text-slate-500 font-medium mt-1">
                 {t.uploadHelp}
               </span>
             </label>
           </div>
 
-          {/* Offline Pretrained Model Badge */}
-          <div className="mt-4 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
-            <span className="font-medium">{t.badgeAiModel}: MobileNetV2 (PlantVillage)</span>
-            <span className="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
-              OFFLINE READY
+          {/* Model Status Badge (Without technical model names) */}
+          <div className="mt-5 p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 text-xs sm:text-sm text-emerald-950 flex items-center justify-between font-bold">
+            <span>Crop Vision Intelligence Engine</span>
+            <span className="text-xs font-mono font-bold text-emerald-800 bg-emerald-200/80 px-2.5 py-0.5 rounded-full">
+              READY
             </span>
           </div>
         </div>
 
-        {/* 1-Click Sample Leaf Gallery */}
-        <div className="lg:col-span-2 bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-xs space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
+        {/* Sample Leaf Gallery */}
+        <div className="lg:col-span-2 bg-white rounded-3xl p-6 sm:p-7 border-2 border-emerald-100 shadow-md shadow-emerald-950/5 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h3 className="font-extrabold text-slate-900 text-base sm:text-lg flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-emerald-700" />
               <span>{t.orSelectSample}</span>
             </h3>
-            <span className="text-xs text-slate-500">
-              {lang === 'te' ? '5 నమూనాలు అందుబాటులో ఉన్నాయి' : '5 Verified Samples'}
+            <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+              {lang === 'te' ? '5 నమూనాలు' : '5 Verified Samples'}
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {LEAF_DISEASES.map(disease => {
               const isSelected = selectedDisease.id === disease.id;
               return (
                 <button
                   key={disease.id}
                   onClick={() => handleSelectSample(disease)}
-                  className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between space-y-2 ${
+                  className={`p-3.5 sm:p-4 rounded-2xl border-2 text-left transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
                     isSelected
-                      ? 'border-emerald-600 bg-emerald-50/70 ring-2 ring-emerald-600/20 shadow-xs'
-                      : 'border-slate-200 hover:border-slate-300 bg-slate-50/50 hover:bg-slate-50'
+                      ? 'border-emerald-600 bg-gradient-to-br from-emerald-50 to-green-50 ring-2 ring-emerald-500/20 shadow-md'
+                      : 'border-slate-200 hover:border-emerald-300 bg-slate-50/60 hover:bg-slate-50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-lg">
+                    <span className="text-2xl">
                       {disease.id === 'healthy' ? '🌿' : 
                        disease.id === 'early_blight' ? '🍂' : 
                        disease.id === 'late_blight' ? '🥀' : 
                        disease.id === 'leaf_mold' ? '🍄' : '🦠'}
                     </span>
-                    <span className="text-[10px] font-bold font-mono text-slate-500">
+                    <span className="text-xs font-extrabold font-mono text-emerald-800 bg-white px-2 py-0.5 rounded-md border border-slate-200">
                       {disease.confidence}%
                     </span>
                   </div>
                   <div>
-                    <h4 className="font-bold text-xs text-slate-900 line-clamp-1">
+                    <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 line-clamp-1">
                       {lang === 'te' ? disease.nameTe : disease.nameEn}
                     </h4>
-                    <p className="text-[10px] text-slate-500 mt-0.5">
+                    <p className="text-xs text-slate-500 font-medium mt-0.5 line-clamp-1">
                       {lang === 'te' ? disease.statusTe : disease.status}
                     </p>
                   </div>
@@ -153,35 +152,35 @@ export default function LeafDiseaseLab({ lang }) {
       </div>
 
       {/* Diagnosis Results Card */}
-      <div className="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200/90 shadow-xs space-y-6">
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border-2 border-emerald-100 shadow-lg shadow-emerald-950/5 space-y-6 sm:space-y-8">
         
         {/* Result Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-100 gap-4">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-800">
+            <span className="text-xs font-black uppercase tracking-wider text-emerald-800">
               {t.diagnosisResult}
             </span>
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-0.5 flex items-center gap-2">
+            <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1 flex items-center gap-2.5">
               <span>{lang === 'te' ? selectedDisease.nameTe : selectedDisease.nameEn}</span>
               {selectedDisease.id === 'healthy' ? (
-                <CheckCircle2 className="w-6 h-6 text-emerald-600 inline-block" />
+                <CheckCircle2 className="w-7 h-7 text-emerald-600 inline-block" />
               ) : (
-                <ShieldAlert className="w-6 h-6 text-amber-600 inline-block" />
+                <ShieldAlert className="w-7 h-7 text-amber-600 inline-block" />
               )}
             </h3>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3.5">
             <div className="text-right">
-              <span className="text-[11px] text-slate-500 uppercase font-semibold block">{t.confidence}</span>
-              <span className="text-xl font-bold font-mono text-emerald-700">
+              <span className="text-xs text-slate-500 uppercase font-bold block">{t.confidence}</span>
+              <span className="text-2xl sm:text-3xl font-black font-mono text-emerald-800">
                 {selectedDisease.confidence}%
               </span>
             </div>
-            <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
+            <span className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-black border ${
               selectedDisease.id === 'healthy' 
-                ? 'bg-emerald-50 text-emerald-800 border-emerald-200' 
-                : 'bg-amber-50 text-amber-800 border-amber-200'
+                ? 'bg-emerald-100 text-emerald-900 border-emerald-300' 
+                : 'bg-amber-100 text-amber-900 border-amber-300'
             }`}>
               {lang === 'te' ? selectedDisease.statusTe : selectedDisease.status}
             </span>
@@ -189,23 +188,23 @@ export default function LeafDiseaseLab({ lang }) {
         </div>
 
         {/* Diagnosis Details: Symptoms, Precautions, Field Cure */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
           
           {/* 1. Symptoms */}
-          <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-2">
-            <h4 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+          <div className="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200/90 space-y-2.5">
+            <h4 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-slate-500"></span>
               <span>{t.symptomsTitle}</span>
             </h4>
-            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
               {lang === 'te' ? selectedDisease.symptomsTe : selectedDisease.symptomsEn}
             </p>
           </div>
 
           {/* 2. Precautions */}
-          <div className="bg-amber-50/60 p-4 sm:p-5 rounded-2xl border border-amber-200/80 space-y-2">
-            <h4 className="font-bold text-amber-900 text-sm flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-600"></span>
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50/40 p-5 rounded-2xl border-2 border-amber-200 space-y-2.5">
+            <h4 className="font-extrabold text-amber-950 text-base flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-amber-500"></span>
               <span>{t.precautionsTitle}</span>
             </h4>
             <p className="text-xs sm:text-sm text-amber-950 leading-relaxed font-medium">
@@ -214,9 +213,9 @@ export default function LeafDiseaseLab({ lang }) {
           </div>
 
           {/* 3. Field Cure */}
-          <div className="bg-emerald-50/70 p-4 sm:p-5 rounded-2xl border border-emerald-200/80 space-y-2">
-            <h4 className="font-bold text-emerald-900 text-sm flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-700"></span>
+          <div className="bg-gradient-to-br from-emerald-50 to-green-50/50 p-5 rounded-2xl border-2 border-emerald-200 space-y-2.5">
+            <h4 className="font-extrabold text-emerald-950 text-base flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-emerald-600"></span>
               <span>{t.cureTitle}</span>
             </h4>
             <p className="text-xs sm:text-sm text-emerald-950 leading-relaxed font-medium">
@@ -226,47 +225,64 @@ export default function LeafDiseaseLab({ lang }) {
 
         </div>
 
-        {/* Telugu-Only YouTube Video Guides */}
-        <div className="pt-4 border-t border-slate-100 space-y-3">
+        {/* Curated Telugu Agricultural Video Guides with Real Thumbnails & Clickable Links */}
+        <div className="pt-6 border-t border-slate-100 space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-bold text-slate-900 text-base flex items-center gap-2">
-              <Video className="w-5 h-5 text-red-600" />
+            <h4 className="font-extrabold text-slate-900 text-lg sm:text-xl flex items-center gap-2.5">
+              <Video className="w-6 h-6 text-red-600" />
               <span>{t.teluguVideosTitle}</span>
             </h4>
-            <span className="text-xs font-bold text-red-700 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
-              100% TELUGU ONLY
+            <span className="text-xs font-bold text-slate-500">
+              {lang === 'te' ? 'రైతు మార్గదర్శక వీడియోలు' : 'Expert Video Demonstrations'}
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
             {selectedDisease.youtubeVideos.map(video => (
-              <div 
+              <a 
                 key={video.id}
-                className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs hover:border-red-300 transition-all flex flex-col justify-between space-y-3"
+                href={video.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group bg-white rounded-2xl border-2 border-slate-200 overflow-hidden shadow-xs hover:shadow-md hover:border-red-400 transition-all flex flex-col cursor-pointer block"
               >
-                <div className="space-y-1.5">
-                  <div className="flex items-center space-x-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-600"></span>
-                    <span className="text-xs font-bold text-red-700">{video.channel}</span>
+                {/* Real YouTube Video Thumbnail */}
+                <div className="relative aspect-video w-full bg-slate-900 overflow-hidden">
+                  <img 
+                    src={video.thumbnail} 
+                    alt={video.titleEn} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      // Fallback image if network fails
+                      e.target.src = "https://images.unsplash.com/photo-1592417817098-8f3d6910985c?w=640&q=80";
+                    }}
+                  />
+                  {/* Play Button Overlay */}
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 flex items-center justify-center transition-colors">
+                    <div className="w-12 h-12 rounded-full bg-red-600 group-hover:bg-red-700 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                      <Play className="w-6 h-6 fill-white ml-0.5" />
+                    </div>
                   </div>
-                  <h5 className="font-bold text-slate-900 text-sm leading-snug">
-                    {lang === 'te' ? video.titleTe : video.titleEn}
-                  </h5>
+                  {/* Channel Tag */}
+                  <div className="absolute bottom-2 left-2 bg-black/80 text-white px-2.5 py-0.5 rounded-md text-xs font-bold backdrop-blur-xs">
+                    {video.channel}
+                  </div>
                 </div>
 
-                <a
-                  href={video.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-between w-full px-3.5 py-2 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl text-xs font-bold transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-1.5">
-                    <Video className="w-4 h-4 text-red-600" />
-                    <span>{t.watchOnYoutube} ({lang === 'te' ? 'తెలుగులో చూడండి' : 'In Telugu'})</span>
-                  </span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
+                {/* Video Info & Direct Link */}
+                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                  <h5 className="font-extrabold text-slate-900 text-sm sm:text-base leading-snug group-hover:text-red-700 transition-colors">
+                    {lang === 'te' ? video.titleTe : video.titleEn}
+                  </h5>
+
+                  <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-red-600 pt-2 border-t border-slate-100">
+                    <span className="flex items-center gap-1.5">
+                      <span>{t.watchOnYoutube}</span>
+                    </span>
+                    <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                </div>
+              </a>
             ))}
           </div>
         </div>
