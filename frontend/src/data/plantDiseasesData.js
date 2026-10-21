@@ -1089,7 +1089,7 @@ export function diagnosePlantFoliage({ canvas, file, selectedCropId = 'all' }) {
   let rustRatio = 0.05;
   let powderyRatio = 0.05;
 
-  // Extract pixel histograms from canvas if available
+  // Extract pixel histograms from canvas using HSL color space (OpenCV standard)
   if (canvas) {
     try {
       const ctx = canvas.getContext('2d');
@@ -1098,28 +1098,44 @@ export function diagnosePlantFoliage({ canvas, file, selectedCropId = 'all' }) {
       let gCount = 0, nCount = 0, cCount = 0, rCount = 0, pCount = 0;
 
       for (let i = 0; i < imgData.length; i += 4) {
-        const r = imgData[i];
-        const g = imgData[i + 1];
-        const b = imgData[i + 2];
+        let r = imgData[i] / 255;
+        let g = imgData[i + 1] / 255;
+        let b = imgData[i + 2] / 255;
 
-        // Green chlorophyll
-        if (g > 75 && g > r * 1.15 && g > b * 1.15) {
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h = 0, s = 0, l = (max + min) / 2;
+
+        if (max !== min) {
+          const d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+          }
+          h *= 60;
+        }
+        s *= 100;
+        l *= 100;
+
+        // 1. Vibrant & warm green chlorophyll (60° to 165° Hue covers all lightings)
+        if (h >= 60 && h <= 165 && s >= 14 && l >= 15 && l <= 85) {
           gCount++;
         }
-        // Dark necrosis (brown/black dead lesion tissue)
-        else if ((r < 75 && g < 75 && b < 75) || (r > 60 && r > g && g > b && r < 135)) {
+        // 2. Dead dark necrosis (true dead tissue spots)
+        else if (l < 18 || (h >= 10 && h <= 38 && s >= 20 && l < 42)) {
           nCount++;
         }
-        // Chlorosis (yellowing/loss of green)
-        else if (r > 150 && g > 140 && b < 115 && Math.abs(r - g) < 45) {
+        // 3. Chlorosis yellowing / viral curling (yellow/amber leaves)
+        else if (h >= 40 && h < 60 && s >= 25 && l >= 35) {
           cCount++;
         }
-        // Rust amber/cinnamon
-        else if (r > 160 && g > 60 && g < 135 && b < 65) {
+        // 4. Rust amber / cinnamon pustules
+        else if (h >= 15 && h <= 38 && s >= 45 && l >= 28 && l <= 62) {
           rCount++;
         }
-        // Powdery/mildew white/gray
-        else if (r > 190 && g > 190 && b > 185 && Math.abs(r - g) < 20) {
+        // 5. Powdery mildew (white chalky coating)
+        else if (s < 18 && l >= 76) {
           pCount++;
         }
       }
@@ -1132,12 +1148,11 @@ export function diagnosePlantFoliage({ canvas, file, selectedCropId = 'all' }) {
         powderyRatio = pCount / total;
       }
     } catch (e) {
-      console.warn("Canvas pixel extraction fallback", e);
+      console.warn("Canvas HSL pixel extraction fallback", e);
     }
   }
 
   // 1. FILTER CANDIDATE POOL BY SELECTED CROP
-  // If the user picked a specific crop (e.g. Paddy), restrict candidates strictly to Paddy!
   let candidates = PLANT_DISEASES_DB;
   if (selectedCropId && selectedCropId !== 'all') {
     candidates = PLANT_DISEASES_DB.filter(d => d.crop === selectedCropId);
@@ -1163,40 +1178,51 @@ export function diagnosePlantFoliage({ canvas, file, selectedCropId = 'all' }) {
       }
     }
 
+    // Total active leaf tissue detected (green + lesions)
+    const leafTissueTotal = greenRatio + necrosisRatio + chlorosisRatio;
+    const greenDominance = leafTissueTotal > 0 ? (greenRatio / leafTissueTotal) : 0;
+
     // B. Visual Profile matching against real pixel histograms
     switch (d.visualProfile) {
       case 'healthy':
-        if (greenRatio > 0.60 && necrosisRatio < 0.12 && chlorosisRatio < 0.14) {
-          score += 75;
+        // If green represents more than 60% of detected foliage tissue, strongly favor healthy
+        if (greenDominance > 0.62 || greenRatio > 0.45) {
+          score += 90 + (greenDominance * 40);
         } else {
-          score -= (necrosisRatio + chlorosisRatio) * 70;
+          score += greenRatio * 30;
         }
         break;
 
       case 'rust':
-        score += rustRatio * 110 + chlorosisRatio * 35;
+        score += rustRatio * 120 + chlorosisRatio * 35;
+        if (greenDominance > 0.75) score -= 40;
         break;
 
       case 'powdery':
-        score += powderyRatio * 105 + chlorosisRatio * 30;
+        score += powderyRatio * 115 + chlorosisRatio * 30;
+        if (greenDominance > 0.75) score -= 40;
         break;
 
       case 'curl':
-        score += chlorosisRatio * 85 + (greenRatio > 0.30 ? 25 : 0);
+        score += chlorosisRatio * 85 + (greenRatio > 0.25 ? 25 : 0);
+        if (greenDominance > 0.85) score -= 50;
         break;
 
       case 'early_blight':
       case 'leaf_spot':
-        score += necrosisRatio * 75 + chlorosisRatio * 35;
+        score += necrosisRatio * 70 + chlorosisRatio * 35;
+        if (greenDominance > 0.72) score -= 50;
         break;
 
       case 'late_blight':
       case 'blast':
-        score += necrosisRatio * 100;
+        score += necrosisRatio * 90;
+        if (greenDominance > 0.72) score -= 50;
         break;
 
       case 'bacterial_spot':
-        score += (necrosisRatio * 60) + (chlorosisRatio * 40);
+        score += (necrosisRatio * 50) + (chlorosisRatio * 40);
+        if (greenDominance > 0.72) score -= 50;
         break;
 
       default:

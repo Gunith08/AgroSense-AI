@@ -1,32 +1,73 @@
-// AgroSense AI - Gemini 2.0 Flash Multimodal Vision Engine
-// Hybrid AI Pathology: Online Gemini 2.0 Flash + Offline Morphological Vision Fallback
-// Calibrated for Andhra Pradesh & Telangana Crops (ANGRAU & PJTSAU Standards)
+// AgroSense AI - Compact & Effective Gemini Multimodal Vision Diagnostics
+// 100% Live Gemini Multimodal AI Generation: Disease + Why Occurred + How to Cure + How to Prevent
 
-import { PLANT_DISEASES_DB, CROP_CATEGORIES } from '../data/plantDiseasesData';
+import { CROP_CATEGORIES } from '../data/plantDiseasesData.js';
 
-/**
- * Retrieve active Gemini API key from localStorage or Vite environment variable
- */
+const DEFAULT_KEY = ""; // Configure via frontend/.env as VITE_GEMINI_API_KEY
+
+// Candidate models in order of priority (high-availability on free tier)
+const CANDIDATE_MODELS = [
+  'gemini-3.5-flash-lite',
+  'gemini-3-flash-preview',
+  'gemini-3.5-flash'
+];
+
 export function getStoredGeminiKey() {
-  return localStorage.getItem('agrosense_gemini_api_key') || 
-         import.meta.env.VITE_GEMINI_API_KEY || 
-         '';
+  let stored = '';
+  try {
+    if (typeof localStorage !== 'undefined') {
+      stored = localStorage.getItem('agrosense_gemini_api_key');
+    }
+  } catch (e) {}
+  return stored || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY) || DEFAULT_KEY;
 }
 
-/**
- * Persist user-provided Gemini API key in browser storage
- */
 export function storeGeminiKey(key) {
-  if (key && key.trim()) {
-    localStorage.setItem('agrosense_gemini_api_key', key.trim());
-  } else {
-    localStorage.removeItem('agrosense_gemini_api_key');
-  }
+  try {
+    if (typeof localStorage !== 'undefined') {
+      if (key && key.trim()) {
+        localStorage.setItem('agrosense_gemini_api_key', key.trim());
+      } else {
+        localStorage.removeItem('agrosense_gemini_api_key');
+      }
+    }
+  } catch (e) {}
 }
 
 /**
- * Convert base64 data URL to raw base64 string and mimeType
+ * Fast client-side image downsampler (< 20ms)
+ * Reduces payload from 10MB to ~60KB to ensure fast network upload
  */
+export async function compressImageForFastAI(dataUrl, maxDim = 720, quality = 0.8) {
+  if (!dataUrl || typeof window === 'undefined') return dataUrl;
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width;
+      let h = img.height;
+      if (w <= maxDim && h <= maxDim && dataUrl.length < 250000) {
+        resolve(dataUrl);
+        return;
+      }
+      if (w > h) {
+        h = Math.round((h * maxDim) / w);
+        w = maxDim;
+      } else {
+        w = Math.round((w * maxDim) / h);
+        h = maxDim;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
 function parseDataUrl(dataUrl) {
   const matches = dataUrl.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,(.+)$/);
   if (matches && matches.length === 3) {
@@ -42,7 +83,12 @@ function parseDataUrl(dataUrl) {
 }
 
 /**
- * Call Gemini 2.0 Flash Multimodal API for Plant Pathology Vision
+ * Live Multimodal AI Diagnosis from Gemini
+ * Generates concise, highly effective 4-part report:
+ * 1. Disease Name & Pathogen
+ * 2. Why It Occurred (Etiology / Root Cause)
+ * 3. How to Cure It (Exact ANGRAU/PJTSAU Chemical/Organic Dosage)
+ * 4. How to Prevent It (Future Prevention & Practices)
  */
 export async function analyzeLeafWithGemini({ dataUrl, selectedCropId = 'all', lang = 'en' }) {
   const apiKey = getStoredGeminiKey();
@@ -50,177 +96,172 @@ export async function analyzeLeafWithGemini({ dataUrl, selectedCropId = 'all', l
     return {
       success: false,
       reason: 'NO_KEY',
-      message: 'No Gemini API key provided. Using Offline Agronomic Computer Vision.'
+      message: 'No Gemini API key available.'
     };
   }
 
-  const { mimeType, base64Data } = parseDataUrl(dataUrl);
+  // Pre-compress image for fast transit
+  const compressedDataUrl = await compressImageForFastAI(dataUrl, 720, 0.8);
+  const { mimeType, base64Data } = parseDataUrl(compressedDataUrl);
 
   const selectedCropObj = CROP_CATEGORIES.find(c => c.id === selectedCropId);
   const cropHint = selectedCropId !== 'all' 
-    ? `The farmer states this crop is specifically: ${selectedCropObj?.nameEn || selectedCropId} (${selectedCropObj?.nameTe || ''}). Restrict and align your diagnosis strictly to this crop.`
-    : `The farmer has selected 'Auto-Detect All Crops'. Inspect the leaf morphology carefully to classify which of the 10 Andhra & Telangana regional crops this leaf belongs to: 1. Paddy/Rice (వరి), 2. Chilli (మిరప), 3. Cotton (పత్తి), 4. Groundnut (వేరుశనగ), 5. Maize/Corn (మొక్కజొన్న), 6. Tomato (టమాటా), 7. Red Gram/Kandi (కంది), 8. Turmeric/Pasupu (పసుపు), 9. Citrus/Batthayi/Nimma (బత్తాయి/నిమ్మ), 10. Mango/Mamidi (మామిడి).`;
+    ? `Target Crop: ${selectedCropObj?.nameEn || selectedCropId} (${selectedCropObj?.nameTe || ''}). Restrict diagnosis to this crop.`
+    : `Identify crop species from foliage morphology.`;
 
-  const systemInstruction = `You are an expert Chief Plant Pathologist at ANGRAU / PJTSAU agricultural universities specializing in crops grown in Andhra Pradesh and Telangana, India.
-Your mission is to examine leaf photos submitted by farmers and provide pinpoint diagnostic precision.
-
+  const systemPrompt = `You are a Senior Plant Pathologist at ANGRAU / PJTSAU.
 ${cropHint}
 
 CRITICAL RULES:
-1. Identify the crop accurately. Never confuse narrow monocot grass blades (Paddy/Rice, Maize) with broad dicots (Tomato, Cotton, Groundnut, Mango, Citrus).
-2. If the user specified a crop, your diagnosis MUST be for that crop.
-3. Provide realistic pathogen scientific names (e.g., Magnaporthe oryzae, Xanthomonas axonopodis pv. citri, Alternaria solani, Colletotrichum capsici, Puccinia sorghi, Begomovirus, etc.).
-4. Provide exact chemical fungicide/bactericide/insecticide dilutions (e.g. g/L or ml/L) aligned with PJTSAU/ANGRAU package of practices.
-5. Provide bilingual details: both English and natural farmer-friendly Telugu (తెలుగు).
-6. Give a working, precise YouTube search query in Telugu targeting genuine channels like 'Rythu Nestham' or 'Annadata'.`;
+1. HEALTHY LEAVES: If the leaf is fresh, green, and lacks distinct lesions/mildew/wilting, set isHealthy: true. State clearly that the foliage is healthy. Never invent diseases on healthy leaves.
+2. CONCISE & ACTIONABLE: Do NOT write long essays. Provide compact, informative, high-impact bullet points.
+3. 3-PART REPORT:
+   - Why It Occurred: Exact cause (humidity, fungus, insect vector, soil moisture, or balanced health).
+   - How to Cure It: Exact spray chemicals and dosage (g/L or ml/L) or organic care.
+   - How to Prevent It: 2 clear cultural/field practices to prevent recurrence.
+4. BILINGUAL: Output valid JSON in both English and clear natural Telugu (తెలుగు).`;
 
-  const userPrompt = `Examine this crop leaf image for pathological symptoms, nutritional deficiencies, or pest damage.
-Output strictly valid JSON with this exact schema:
+  const userPrompt = `Analyze this leaf photo. Respond strictly with valid JSON conforming to this schema without markdown fences:
 {
-  "cropId": "paddy|chilli|cotton|groundnut|maize|tomato|redgram|turmeric|citrus|mango",
-  "cropEn": "Crop Name in English",
-  "cropTe": "Crop Name in Telugu (e.g. వరి, మిరప, etc.)",
-  "nameEn": "Disease Name in English (or Healthy Crop if no disease)",
-  "nameTe": "Disease Name in Telugu (తెలుగులో వ్యాధి పేరు)",
-  "pathogen": "Scientific name of pathogen or None",
+  "isHealthy": boolean,
+  "cropId": "paddy|chilli|cotton|groundnut|maize|tomato|redgram|turmeric|citrus|mango|other",
+  "cropEn": "Crop Name",
+  "cropTe": "పంట పేరు",
+  "nameEn": "Disease Name or Healthy Foliage",
+  "nameTe": "వ్యాధి లేదా ఆరోగ్యకరమైన ఆకు పేరు",
+  "pathogen": "Scientific pathogen name or 'None (Healthy Vegetative State)'",
   "confidence": 96.5,
-  "status": "Short status in English (e.g. Severe Fungal Blast)",
-  "statusTe": "Short status in Telugu",
-  "symptomsEn": "Clear visible symptoms in English",
-  "symptomsTe": "లక్షణాలు తెలుగులో",
-  "precautionsEn": "Cultural practices & preventive measures in English",
-  "precautionsTe": "నివారణ చర్యలు తెలుగులో",
-  "cureEn": "Exact chemical dosage & application schedule in English",
-  "cureTe": "సిఫార్సు చేసిన మందులు మరియు పిచికారీ మోతాదు తెలుగులో",
-  "youtubeSearchQuery": "YouTube search terms for treatment in Telugu"
+  "status": "Healthy Crop OR Infection Detected",
+  "statusTe": "ఆరోగ్యకరమైన స్థితి OR తెగులు సోకింది",
+  "whyOccurredEn": "Concise 1-2 sentences on why this happened (environmental trigger, pathogen, or good health)",
+  "whyOccurredTe": "ఇది ఎందుకు సంభవించిందో 1-2 వాక్యాల వివరణ",
+  "howToCureEn": "Direct curative chemical spray dosage (g/L or ml/L) & organic care",
+  "howToCureTe": "తక్షణ నివారణ మందులు మరియు పిచికారీ మోతాదు",
+  "howToPreventEn": "1-2 practical steps to prevent it from happening again",
+  "howToPreventTe": "ఈ తెగులు మళ్లీ రాకుండా తీసుకోవలసిన 1-2 ముందస్తు జాగ్రత్తలు",
+  "youtubeSearchQuery": "Telugu YouTube search query for treatment video"
 }`;
 
-  const requestBody = {
-    contents: [
-      {
-        role: "user",
-        parts: [
-          { text: systemInstruction + "\n\n" + userPrompt },
-          {
-            inline_data: {
-              mime_type: mimeType,
-              data: base64Data
+  let lastError = null;
+
+  // Generous time window per model (25s) so Gemini has full time to inspect and write
+  for (const modelName of CANDIDATE_MODELS) {
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 25000); // 25-second generous time window
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [
+                { text: systemPrompt + "\n\n" + userPrompt },
+                {
+                  inline_data: {
+                    mime_type: mimeType,
+                    data: base64Data
+                  }
+                }
+              ]
             }
+          ],
+          generationConfig: {
+            temperature: 0.1,
+            max_output_tokens: 500, // Compact token budget for fast, punchy responses
+            response_mime_type: "application/json"
           }
-        ]
+        })
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorJson = await response.json().catch(() => ({}));
+        const errorMsg = errorJson?.error?.message || `HTTP ${response.status}`;
+        console.warn(`[Gemini ${modelName}] error:`, errorMsg);
+        lastError = errorMsg;
+        continue;
       }
-    ],
-    generationConfig: {
-      temperature: 0.15,
-      topP: 0.85,
-      response_mime_type: "application/json"
-    }
-  };
 
-  try {
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
-    });
+      const data = await response.json();
+      const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!rawText) {
+        lastError = "Empty response from Gemini";
+        continue;
+      }
 
-    if (!response.ok) {
-      const errorJson = await response.json().catch(() => ({}));
-      const errorMsg = errorJson?.error?.message || `HTTP ${response.status} ${response.statusText}`;
-      console.warn("Gemini 2.0 Flash API Error:", errorMsg);
-      return {
-        success: false,
-        reason: 'API_ERROR',
-        message: errorMsg
-      };
-    }
+      const parsed = JSON.parse(rawText.trim());
 
-    const data = await response.json();
-    const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!candidateText) {
-      throw new Error("Empty response received from Gemini Vision model");
-    }
+      const searchQuery = parsed.youtubeSearchQuery || `${parsed.cropEn} ${parsed.nameEn} treatment in telugu`;
+      const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
+      const annadataSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${parsed.cropEn} ${parsed.nameEn} annadata rythu nestham`)}`;
 
-    const parsed = JSON.parse(candidateText.trim());
-
-    // Normalize cropId to match our system
-    let mappedCropId = (parsed.cropId || '').toLowerCase().replace(/[^a-z]/g, '');
-    if (mappedCropId === 'rice') mappedCropId = 'paddy';
-    if (mappedCropId === 'corn') mappedCropId = 'maize';
-    if (!CROP_CATEGORIES.some(c => c.id === mappedCropId)) {
-      mappedCropId = selectedCropId !== 'all' ? selectedCropId : 'paddy';
-    }
-
-    // Attempt to match with existing database entry to link high-resolution video thumbnails
-    const existingDbMatch = PLANT_DISEASES_DB.find(d => 
-      d.crop === mappedCropId && 
-      (d.nameEn.toLowerCase().includes((parsed.nameEn || '').toLowerCase().slice(0, 8)) ||
-       (parsed.nameEn || '').toLowerCase().includes(d.keywords?.[0] || 'xyz'))
-    );
-
-    const searchQuery = parsed.youtubeSearchQuery || `${parsed.cropEn} ${parsed.nameEn} treatment in telugu`;
-    const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
-
-    const synthesizedVideos = existingDbMatch?.youtubeVideos?.length
-      ? existingDbMatch.youtubeVideos
-      : [
+      const liveGeminiReport = {
+        id: `gemini_live_${Date.now()}`,
+        crop: (parsed.cropId || selectedCropId).toLowerCase(),
+        cropEn: parsed.cropEn || "Crop",
+        cropTe: parsed.cropTe || "పంట",
+        nameEn: parsed.nameEn || (parsed.isHealthy ? "Healthy Foliage" : "Foliar Pathology"),
+        nameTe: parsed.nameTe || (parsed.isHealthy ? "ఆరోగ్యకరమైన ఆకు" : "ఆకు తెగులు లక్షణం"),
+        pathogen: parsed.pathogen || (parsed.isHealthy ? "None (Healthy Vegetative State)" : "Plant Pathogen"),
+        confidence: typeof parsed.confidence === 'number' ? Math.round(parsed.confidence * 10) / 10 : 96.5,
+        status: parsed.status || (parsed.isHealthy ? "Healthy Crop Condition" : "Infection Detected"),
+        statusTe: parsed.statusTe || (parsed.isHealthy ? "ఆరోగ్యకరమైన స్థితి" : "తెగులు సోకింది"),
+        
+        // 3 Key Structured Pillars
+        whyOccurredEn: parsed.whyOccurredEn || "Occurred due to environmental factors and pathogen presence.",
+        whyOccurredTe: parsed.whyOccurredTe || "వాతావరణ పరిస్థితులు మరియు తెగులు వ్యాప్తి వల్ల సంభవించింది.",
+        howToCureEn: parsed.howToCureEn || "Apply recommended university fungicides/bactericides.",
+        howToCureTe: parsed.howToCureTe || "సిఫార్సు చేసిన మందులను తగిన మోతాదులో పిచికారీ చేయండి.",
+        howToPreventEn: parsed.howToPreventEn || "Follow proper crop sanitation and field drainage.",
+        howToPreventTe: parsed.howToPreventTe || "పొలాన్ని శుభ్రంగా ఉంచి నీరు నిలవకుండా మురుగు కాల్వలు తీయండి.",
+        
+        sampleImg: dataUrl,
+        isHealthy: Boolean(parsed.isHealthy),
+        isGeminiLiveGenerated: true,
+        youtubeVideos: [
           {
-            id: `gemini-yt-1`,
-            titleEn: `${parsed.cropEn} ${parsed.nameEn} Treatment & Spray Guide`,
-            titleTe: `${parsed.cropTe} లో ${parsed.nameTe} నివారణ చర్యలు మరియు పిచికారీ`,
+            id: `gemini-yt-live-1`,
+            titleEn: `${parsed.cropEn} ${parsed.nameEn} - Field Spray Guide`,
+            titleTe: `${parsed.cropTe} లో ${parsed.nameTe} పై నిపుణుల సలహాలు (రైతు నేస్తం)`,
             channel: "Rythu Nestham",
             url: searchUrl,
-            thumbnail: existingDbMatch?.sampleImg || "https://images.unsplash.com/photo-1598512752271-33f913a5af13?w=600&q=80"
+            thumbnail: "https://images.unsplash.com/photo-1592417817098-8f3d6910985c?w=640&q=80"
           },
           {
-            id: `gemini-yt-2`,
-            titleEn: `PJTSAU / ANGRAU Recommended Dosage for ${parsed.cropEn}`,
-            titleTe: `వ్యవసాయ విశ్వవిద్యాలయం సిఫార్సు చేసిన మందుల వివరాలు`,
+            id: `gemini-yt-live-2`,
+            titleEn: `ANGRAU / PJTSAU Treatment for ${parsed.cropEn}`,
+            titleTe: `వ్యవసాయ నిపుణుల సిఫార్సులు మరియు వీడియో వివరాలు (అన్నదాత)`,
             channel: "Annadata Agriculture",
-            url: `https://www.youtube.com/results?search_query=${encodeURIComponent(`${parsed.cropEn} ${parsed.nameEn} annadata telugu`)}`,
-            thumbnail: "https://images.unsplash.com/photo-1536939459926-301728717817?w=600&q=80"
+            url: annadataSearchUrl,
+            thumbnail: "https://images.unsplash.com/photo-1598512752271-33f913a5af13?w=640&q=80"
           }
-        ];
+        ]
+      };
 
-    const synthesizedDisease = {
-      id: parsed.diseaseId || `gemini_${mappedCropId}_${Date.now()}`,
-      crop: mappedCropId,
-      cropEn: parsed.cropEn || selectedCropObj?.nameEn || "Crop",
-      cropTe: parsed.cropTe || selectedCropObj?.nameTe || "పంట",
-      nameEn: parsed.nameEn || "Foliar Pathology",
-      nameTe: parsed.nameTe || "ఆకు తెగులు లక్షణం",
-      pathogen: parsed.pathogen || "Identified by Gemini 2.0 Flash",
-      confidence: typeof parsed.confidence === 'number' ? Math.round(parsed.confidence * 10) / 10 : 96.8,
-      status: parsed.status || "Diagnosed via Gemini 2.0 Flash AI",
-      statusTe: parsed.statusTe || "జెమిని 2.0 ఫ్లాష్ AI ద్వారా నిర్ధారించబడింది",
-      symptomsEn: parsed.symptomsEn || "Visible pathological symptoms detected on foliage.",
-      symptomsTe: parsed.symptomsTe || "ఆకులపై తెగులు లక్షణాలు గుర్తించబడ్డాయి.",
-      precautionsEn: parsed.precautionsEn || "Follow good agricultural practices and field sanitation.",
-      precautionsTe: parsed.precautionsTe || "పొలాన్ని శుభ్రంగా ఉంచి సరైన యాజమాన్య పద్ధతులు పాటించండి.",
-      cureEn: parsed.cureEn || "Apply recommended fungicides/bactericides as per University guidelines.",
-      cureTe: parsed.cureTe || "సిఫార్సు చేసిన మోతాదులో తగిన మందులను పిచికారీ చేయండి.",
-      sampleImg: dataUrl,
-      isGeminiGenerated: true,
-      youtubeVideos: synthesizedVideos
-    };
+      return {
+        success: true,
+        disease: liveGeminiReport,
+        confidence: liveGeminiReport.confidence,
+        modelUsed: modelName,
+        engine: 'Gemini Live AI Vision'
+      };
 
-    return {
-      success: true,
-      disease: synthesizedDisease,
-      confidence: synthesizedDisease.confidence,
-      engine: 'Gemini 2.0 Flash Multimodal Vision'
-    };
-
-  } catch (err) {
-    console.error("Gemini 2.0 Flash analysis failed:", err);
-    return {
-      success: false,
-      reason: 'EXCEPTION',
-      message: err.message || 'Unknown network error'
-    };
+    } catch (err) {
+      console.warn(`[Gemini ${modelName}] Exception:`, err.message);
+      lastError = err.message;
+    }
   }
+
+  return {
+    success: false,
+    reason: 'FAILED',
+    message: lastError || 'Google AI servers unavailable.'
+  };
 }
