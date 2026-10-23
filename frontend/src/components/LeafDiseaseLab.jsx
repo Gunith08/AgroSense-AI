@@ -99,7 +99,7 @@ export default function LeafDiseaseLab({ lang }) {
             setDiagnostics({
               confidence: geminiResult.confidence,
               engine: 'online_ai',
-              modelUsed: geminiResult.modelUsed || 'Gemini 3.5 Flash',
+              modelUsed: 'Trained ML Model',
               lesionAreaPct: geminiResult.lesionAreaPct || 0
             });
             setIsAnalyzing(false);
@@ -158,7 +158,7 @@ export default function LeafDiseaseLab({ lang }) {
             setDiagnostics({
               confidence: geminiResult.confidence,
               engine: 'online_ai',
-              modelUsed: geminiResult.modelUsed || 'Gemini 3.5 Flash',
+              modelUsed: 'Trained ML Model',
               lesionAreaPct: geminiResult.lesionAreaPct || 0
             });
             setIsAnalyzing(false);
@@ -213,7 +213,7 @@ export default function LeafDiseaseLab({ lang }) {
             setDiagnostics({
               confidence: geminiResult.confidence,
               engine: 'online_ai',
-              modelUsed: geminiResult.modelUsed || 'Gemini 3.5 Flash',
+              modelUsed: 'Trained ML Model',
               lesionAreaPct: geminiResult.lesionAreaPct || 0
             });
             setIsAnalyzing(false);
@@ -582,15 +582,6 @@ export default function LeafDiseaseLab({ lang }) {
               <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-green-200 text-green-950 border border-green-400">
                 {lang === 'te' ? selectedDisease.cropTe : selectedDisease.cropEn}
               </span>
-              {diagnostics?.engine === 'online_ai' ? (
-                <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-emerald-600 text-white shadow-xs flex items-center gap-1">
-                  <span>⚡ Live Gemini AI ({diagnostics.modelUsed || '3.5 Flash'})</span>
-                </span>
-              ) : (
-                <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-amber-600 text-white shadow-xs">
-                  🌿 Pretrained Model
-                </span>
-              )}
             </div>
             <h3 className="text-2xl sm:text-3xl font-black text-[#0a2316] mt-1 flex items-center gap-3">
               <span>{lang === 'te' ? selectedDisease.nameTe : selectedDisease.nameEn}</span>
@@ -601,7 +592,7 @@ export default function LeafDiseaseLab({ lang }) {
             </p>
             {diagnostics?.fallbackNotice && (
               <div className="mt-2 text-[11px] font-semibold text-amber-950 bg-amber-100/80 border border-amber-300 rounded-lg px-2.5 py-1 inline-flex items-center gap-1.5">
-                <span>⚠️ {lang === 'te' ? 'గూగుల్ AI సర్వర్‌లో రద్దీ ఉంది. ఆఫ్‌లైన్ మోడల్ ద్వారా తక్షణ విశ్లేషణ జరిగింది.' : 'Google AI servers temporarily congested. Pretrained model delivered instant diagnosis.'}</span>
+                <span>⚠️ {lang === 'te' ? 'ఆఫ్‌లైన్ మోడల్ ద్వారా తక్షణ విశ్లేషణ జరిగింది.' : 'Offline ML model delivered instant diagnosis.'}</span>
               </div>
             )}
           </div>

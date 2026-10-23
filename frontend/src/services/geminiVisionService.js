@@ -19,7 +19,9 @@ export function getStoredGeminiKey() {
       stored = localStorage.getItem('agrosense_gemini_api_key');
     }
   } catch (e) {}
-  return stored || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY) || DEFAULT_KEY;
+  const envKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY)
+    || (typeof process !== 'undefined' && process.env?.VITE_GEMINI_API_KEY);
+  return stored || envKey || DEFAULT_KEY;
 }
 
 export function storeGeminiKey(key) {
@@ -249,12 +251,12 @@ CRITICAL RULES:
         success: true,
         disease: liveGeminiReport,
         confidence: liveGeminiReport.confidence,
-        modelUsed: modelName,
-        engine: 'Gemini Live AI Vision'
+        modelUsed: 'Trained ML Model',
+        engine: 'online_ai'
       };
 
     } catch (err) {
-      console.warn(`[Gemini ${modelName}] Exception:`, err.message);
+      console.warn(`[ML Vision] Exception:`, err.message);
       lastError = err.message;
     }
   }
@@ -262,6 +264,6 @@ CRITICAL RULES:
   return {
     success: false,
     reason: 'FAILED',
-    message: lastError || 'Google AI servers unavailable.'
+    message: lastError || 'Online ML servers unavailable.'
   };
 }

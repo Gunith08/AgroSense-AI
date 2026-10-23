@@ -133,13 +133,10 @@ export default function IoTDeviceStation({
               alt="Real 4K IoT Agricultural Soil Moisture & pH Probe" 
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/70 via-transparent to-transparent flex items-end justify-between p-4">
+            <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/70 via-transparent to-transparent flex items-end justify-start p-4">
               <span className="bg-white/95 text-[#0e4225] text-xs font-black px-3.5 py-1.5 rounded-xl border border-emerald-300 shadow-sm flex items-center gap-1.5 backdrop-blur-xs">
                 <Radio className="w-3.5 h-3.5 text-green-600" />
                 <span>Field Sensor: Stainless Steel Multi-Prongs</span>
-              </span>
-              <span className="bg-green-600 text-white text-[11px] font-black px-3 py-1 rounded-lg shadow-sm border border-green-300">
-                REAL 4K SENSOR PHOTO
               </span>
             </div>
           </div>
@@ -333,13 +330,10 @@ export default function IoTDeviceStation({
               alt="Real 4K Agricultural Automated Field Weather Station" 
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/70 via-transparent to-transparent flex items-end justify-between p-4">
+            <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/70 via-transparent to-transparent flex items-end justify-start p-4">
               <span className="bg-white/95 text-[#0e4225] text-xs font-black px-3.5 py-1.5 rounded-xl border border-emerald-300 shadow-sm flex items-center gap-1.5 backdrop-blur-xs">
                 <Radio className="w-3.5 h-3.5 text-green-600" />
                 <span>Field Meteorological Mast & Anemometer</span>
-              </span>
-              <span className="bg-green-600 text-white text-[11px] font-black px-3 py-1 rounded-lg shadow-sm border border-green-300">
-                REAL 4K HARDWARE PHOTO
               </span>
             </div>
           </div>
